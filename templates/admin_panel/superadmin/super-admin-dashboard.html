@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}SuperAdmin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">SuperAdmin Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <a href="#users-section" class="btn btn-primary w-100 mb-2">Manage Users</a>
+    </div>
+    <div class="col-md-3">
+        <a href="#admins-section" class="btn btn-secondary w-100 mb-2">Manage Admins</a>
+    </div>
+    <div class="col-md-3">
+        <a href="#tasks-section" class="btn btn-success w-100 mb-2">All Tasks</a>
+    </div>
+    <div class="col-md-3">
+        <a href="#reports-section" class="btn btn-info w-100 mb-2">Task Reports</a>
+    </div>
+</div>
+
+<!-- USERS SECTION -->
+<section id="users-section" class="mb-5">
+    <h3>All Users</h3>
+    <a href="{% url 'user-create' %}" class="btn btn-success mb-2">+ Create New User</a>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.user_type }}</td>
+                <td>
+                    <a href="{% url 'user-edit' user.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'user-delete' user.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- ADMINS SECTION -->
+<section id="admins-section" class="mb-5">
+    <h3>Admins</h3>
+    <a href="{% url 'assign-user-admin' %}" class="btn btn-secondary mb-2">Assign Users to Admin</a>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Admin</th>
+                <th>Assigned Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for admin in admins %}
+            <tr>
+                <td>{{ admin.username }}</td>
+                <td>
+                    {% for user in admin.assigned_users %}
+                        {{ user.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        No users assigned
+                    {% endfor %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center">No admins found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+<section id="tasks-section" class="mb-5">
+    <h3>All Tasks</h3>
+    <a href="{% url 'task-create' %}" class="btn btn-success mb-2">+ Create New Task</a>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th>Assigned To</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>
+                    <a href="{% url 'task-edit' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'task-delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="{% url 'task-report' task.id %}" class="btn btn-info btn-sm">Report</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No tasks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+<section id="reports-section" class="mb-5">
+    <h3>Task Reports</h3>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Task</th>
+                <th>Completed By</th>
+                <th>Worked Hours</th>
+                <th>Completion Report</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            {% if task.status == "COMPLETED" %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.worked_hours }}</td>
+                <td>{{ task.completion_report }}</td>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No completed tasks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
+
+

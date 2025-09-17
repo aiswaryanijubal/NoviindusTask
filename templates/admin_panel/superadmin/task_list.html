@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}All Tasks{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Tasks</h2>
+
+<a href="{% url 'task-create' %}" class="btn btn-success mb-3">+ Create New Task</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.assigned_to.username }}</td>
+            <td>{{ task.status }}</td>
+            <td>{{ task.due_date }}</td>
+            <td>
+                <a href="{% url 'task-edit' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'task-delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                <a href="{% url 'task-report' task.id %}" class="btn btn-info btn-sm">Report</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center">No tasks found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
