@@ -48,7 +48,7 @@ class LoginWithJWTView(APIView):
 
 
 
-class TaskListView(generics.ListAPIView):
+class TaskListAPIView(generics.ListAPIView):
     serializer_class=TaskListSerializer
     permission_class=[IsAuthenticated]
     
@@ -57,7 +57,7 @@ class TaskListView(generics.ListAPIView):
         return Task.objects.filter(assigned_to=self.request.user)
     
 
-class TaskUpdateView(generics.UpdateAPIView):
+class TaskUpdateAPIView(generics.UpdateAPIView):
     serializer_class = TaskListSerializer
     permission_classes = [IsAuthenticated]
     queryset = Task.objects.all()
@@ -89,7 +89,7 @@ class TaskUpdateView(generics.UpdateAPIView):
     
 
 
-class TaskReportView(APIView):
+class TaskReportAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrSuperAdmin]
 
     def get(self, request, pk):
@@ -104,6 +104,9 @@ class TaskReportView(APIView):
             "completion_report": task.completion_report,
             "worked_hours": task.worked_hours
         })
+
+
+
 
 
 class CustomLoginView(LoginView):
@@ -153,7 +156,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             context["users"] = CustomUser.objects.filter(user_type='USER')
             context["admins"]= CustomUser.objects.filter(user_type='ADMIN')
         elif user.user_type == "ADMIN":
+            print(user)
             user_ids = user.assigned_users.values_list("id", flat=True)
+            name = user.assigned_users.values_list("username", flat=True)
+            print(name)
             print(user_ids)
             context["tasks"] = Task.objects.filter(assigned_to_id__in=user_ids)
             
@@ -204,7 +210,7 @@ class TaskCreateView(CreateView):
     model = Task
     fields = ['title', 'assigned_to', 'status', 'due_date', 'completion_report', 'worked_hours']
     template_name = "admin_panel/superadmin/task_form.html"  
-    success_url = reverse_lazy('task-list')  
+    success_url = reverse_lazy('dashboard')  
     
     
     def get_form(self, form_class=None):

@@ -51,7 +51,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def assigned_users(self):
         if self.user_type == self.USER_TYPE_COMPANY:
             from tma.models import AdminManage
-            user_ids = AdminManage.objects.filter(admin=self).values_list("id", flat=True)
+            user_ids = AdminManage.objects.filter(admin=self).values_list("user_id", flat=True)
             return CustomUser.objects.filter(id__in=user_ids)
         return CustomUser.objects.none()
         
