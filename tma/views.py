@@ -153,9 +153,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             context["users"] = CustomUser.objects.filter(user_type='USER')
             context["admins"]= CustomUser.objects.filter(user_type='ADMIN')
         elif user.user_type == "ADMIN":
-            user_ids = AdminManage.objects.filter(admin=user).values_list("user_id", flat=True)
+            user_ids = user.assigned_users.values_list("id", flat=True)
+            print(user_ids)
             context["tasks"] = Task.objects.filter(assigned_to_id__in=user_ids)
-        
+            
 
         return context
 
@@ -206,6 +207,18 @@ class TaskCreateView(CreateView):
     success_url = reverse_lazy('task-list')  
     
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user = self.request.user
+
+        if user.user_type == "SUPERADMIN":
+            form.fields["assigned_to"].queryset = CustomUser.objects.filter(user_type="USER")
+        elif user.user_type == "ADMIN":
+            user_ids = AdminManage.objects.filter(admin=user).values_list("user_id", flat=True)
+            form.fields["assigned_to"].queryset = CustomUser.objects.filter(id__in=user_ids)
+
+        return form
+        
 
 class TaskUpdateView(UpdateView):
     model = Task
