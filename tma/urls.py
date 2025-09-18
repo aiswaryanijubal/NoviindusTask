@@ -11,7 +11,7 @@ from .views import (
 
 urlpatterns = [
     # APIs
-    path('api/v1/login-jwt/', LoginWithJWTView.as_view(), name='api_login'),
+    path('login-jwt/', LoginWithJWTView.as_view(), name='api_login'),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/tasks/<int:pk>/report/', TaskReportAPIView.as_view(), name='task-report'),

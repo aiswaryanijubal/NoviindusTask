@@ -61,5 +61,35 @@
         {% endfor %}
     </tbody>
 </table>
+<section id="reports-section" class="mb-5">
+    <h3>Task Reports</h3>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Task</th>
+                <th>Completed By</th>
+                <th>Worked Hours</th>
+                <th>Completion Report</th>
+            </t
+            r>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            {% if task.status == "COMPLETED" %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.worked_hours }}</td>
+                <td>{{ task.completion_report }}</td>
+            </tr>
+            {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No completed tasks found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
 {% endblock %}
 

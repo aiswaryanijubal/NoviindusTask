@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-t0@y83fk5c!u75ejq*hza!mddfd%k28#lfck=i*@6mc(owj1*_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','*']
 
 AUTH_USER_MODEL = 'tma.CustomUser'
 
